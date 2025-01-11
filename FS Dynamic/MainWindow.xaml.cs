@@ -69,19 +69,7 @@ namespace FS_Dynamic
 
             db = new ApplicationContext();// Соединение с БД
 
-            /*List<Result> results = db.Results.ToList();
-            string list = "";
-            foreach (Result result in results ) {list += "Time: " + result.overall + " | ";}
-
-            Ex.Text = list;
-             */
-            /*List<Timer> timers = db.Timers.ToList();
-            string list1 = "";
-            foreach (Timer timer in timers) { list1 += "Time: " + timer.flag + " | "; }
-            
-            Ex.Text = list1;
-            */
-
+           
             DoubleAnimation btnAnimation = new DoubleAnimation();//Анимация кнопок
             btnAnimation.From = 0;
             btnAnimation.To = 75;

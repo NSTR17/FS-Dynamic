@@ -14,6 +14,9 @@ using System.Windows.Shapes;
 using System.Threading;
 using System.Diagnostics;
 using System.Timers;
+using System.Data.SQLite;
+using System.Data.Entity;
+
 
 namespace FS_Dynamic
 {
@@ -22,55 +25,22 @@ namespace FS_Dynamic
     /// </summary>
     public partial class DemoWindow : Window
     {
-        int k = 1;
+        Stopwatch stopWatch = new Stopwatch();
+        DateTime timer_1 = new DateTime(0, 0);
+        DateTime timer_2 = new DateTime(0, 0);
+        bool st_timer1 = false;
+        AutoResetEvent stop_timer1 = new AutoResetEvent(false);
+        int new_flag = 0;
+        const int FlagOn = 2;
+        Timer timer_db_on = new Timer(FlagOn);
+
+
 
         public DemoWindow()
         {
             InitializeComponent();
 
-            try
-            {
-                do
-                {
-                    Timer();
-                }
-                while (k != 0);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-
-            }
-            //Team_Name.Text = Data.Choosen_TeamName; 
-
-            /* try
-             {
-
-                do
-                 {
-                     ApplicationContext applicationContext = new ApplicationContext();
-                     List<Result> results = applicationContext.Results.ToList();
-
-                     listofResults.ItemsSource = results;
-
-                     List<Timer> timers = applicationContext.Timers.ToList();
-
-                     listofTimers.ItemsSource = timers;
-
-                     //Thread.Sleep(10000);
-                 }
-                while (k != 0);
-
-
-             }
-
-             catch (Exception ex)
-             {
-                 MessageBox.Show(ex.Message);
-
-             }
-
-             */
+            
 
 
 
@@ -95,22 +65,41 @@ namespace FS_Dynamic
             }
         }
 
-        private void Timer()
+        private void Reload()
         {
             try
             {
-               
-                    ApplicationContext applicationContext = new ApplicationContext();
-                    List<Result> results = applicationContext.Results.ToList();
 
-                    listofResults.ItemsSource = results;
+                ApplicationContext db = new ApplicationContext();
 
-                    List<Timer> timers = applicationContext.Timers.ToList();
+                //listofResults.ItemsSource = results;
 
-                    listofTimers.ItemsSource = timers;
 
-                    Thread.Sleep(100000);
-               
+                IQueryable<int> timers = db.Timers.Select(c => c.flag);
+                List<int> flags = timers.ToList();
+                new_flag = flags.Last();
+
+                switch (new_flag)
+                {
+                    case 1:
+                        ParameterizedThreadStart timer = new ParameterizedThreadStart(Timer);
+                        Thread thread_1 = new Thread(Timer);
+                        st_timer1 = true;
+                        thread_1.Start((object)st_timer1);
+                        db.Timers.Add(timer_db_on);
+                        db.SaveChanges();
+                        break;
+
+                    case 0:
+                        stop_timer1.Set();
+
+                        break;
+
+                }
+
+
+                Thread.Sleep(1000);
+
             }
             catch (Exception ex)
             {
@@ -119,5 +108,62 @@ namespace FS_Dynamic
             }
         }
 
+        private void StartFunction(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+                while (true)
+                {
+                    Reload();
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+
+            }
+        }
+
+        private void Timer(object argument)
+        {
+            try
+            {
+                while (st_timer1)
+                {
+                    if (stop_timer1.WaitOne(0))
+                    {
+                        timer_1 = timer_2;
+                        return;
+                    }
+                    stopWatch.Start();
+                    TimeSpan rs = stopWatch.Elapsed;
+                    string elapsedTime_Timer = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    rs.Hours, rs.Minutes, rs.Seconds, rs.Milliseconds);
+                    try
+                    {
+                        Result_Demo.Text = elapsedTime_Timer;
+                    }
+                    catch (Exception ex) 
+                    { 
+                    MessageBox.Show(ex.Message);
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+
+            }
+
+
+
+
+
+
+        }
     }
 }

@@ -25,7 +25,8 @@ namespace FS_Dynamic
 
         public override string ToString()
         {
-            return "Timer " + Flag;
+            //return "Timer " + Flag;
+            return "" + Flag;
         }
 
     }

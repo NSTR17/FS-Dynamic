@@ -37,8 +37,8 @@
                 </TextBlock>
                 <TextBlock x:Name="Result" HorizontalAlignment="Left" Margin="100,109,0,163" TextWrapping="Wrap" Width="196" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" Text="00:00:000&#xA;" FontWeight="Bold" Height="53"/>
                 <Label Margin="61,109,431,173" Content="Clear Time:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC" Grid.ColumnSpan="2"/>
-                <TextBox x:Name= "Bust_Q" HorizontalAlignment="Left" Margin="160,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Height="36" FontSize="20" Text="0" TextAlignment="Center" Foreground="#FFDCDBDB"/>
-                <TextBox x:Name= "Skip_Q" HorizontalAlignment="Left" Margin="160,181,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Height="36" FontSize="20" Text="0" TextAlignment="Center" Foreground="#FFDCDBDB"/>
+                <TextBlock x:Name= "Bust_Q" HorizontalAlignment="Left" Margin="160,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Height="36" FontSize="20" Text="0" TextAlignment="Center" Foreground="#FFDCDBDB"/>
+                <TextBlock x:Name= "Skip_Q" HorizontalAlignment="Left" Margin="160,181,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Height="36" FontSize="20" Text="0" TextAlignment="Center" Foreground="#FFDCDBDB"/>
                 <Label Margin="68,150,424,132" Content="Busts:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC"/>
                 <Label Margin="68,191,424,91" Content="Skips:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC"/>
                 <TextBlock x:Name="Result_plus_Busts" HorizontalAlignment="Left" Margin="100,233,0,0" TextWrapping="Wrap" Text="00:00:000" VerticalAlignment="Top" Width="196" Height="53" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" FontWeight="Bold"/>
@@ -51,7 +51,6 @@
                 <Button x:Name="Skip_plus" Content="Skip +" Margin="278,182,238,94" Foreground="#DDFDFDFC" Background="#FF373240" Height="32" Click="Skip_plus_Click" Width="75" BorderBrush="#FFF90B00"/>
                 <Button x:Name="Skip_min" Content="Skip -" Margin="382,181,134,95" Foreground="#DDFDFDFC" Background="#FF373240" Height="32" Click="Skip_min_Click" Width="75"/>
                 <Button x:Name="Bust_min" Content="Bust -" Margin="382,128,133,148" Foreground="#DDFDFDFC" Background="#FF373240" Height="32" Click="Bust_min_Click" Width="75" RenderTransformOrigin="0.447,3.782"/>
-                <CheckBox Margin="61,279,508,15" RenderTransformOrigin="25.591,2.216"></CheckBox>
 
 
                 <Button x:Name="Red_Signal" Content="Signal" Margin="606,277,-90,-1" Foreground="#DDFDFDFC" Background="#FFCA2E26" Height="32" Click="Red_Signal_Click" Width="75"/>
