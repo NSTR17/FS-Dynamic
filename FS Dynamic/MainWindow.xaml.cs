@@ -68,13 +68,7 @@ namespace FS_Dynamic
             InitializeComponent();
 
             db = new ApplicationContext();// Соединение с БД
-
-           
-            DoubleAnimation btnAnimation = new DoubleAnimation();//Анимация кнопок
-            btnAnimation.From = 0;
-            btnAnimation.To = 75;
-            btnAnimation.Duration = TimeSpan.FromSeconds(3);
-            
+                                   
 
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
@@ -100,7 +94,7 @@ namespace FS_Dynamic
             }
         }
 
-        void DataRecieved(object sender, SerialDataReceivedEventArgs e)
+        void DataRecieved(object sender, SerialDataReceivedEventArgs e) //Обработка входящих сигналов
         {
             Dispatcher.Invoke(() => TextIn.Text = res = sp.ReadExisting());
             switch (res)
@@ -136,7 +130,7 @@ namespace FS_Dynamic
 
         }
 
-        private void Timer(object argument)
+        private void Timer(object argument) //Декоративный таймер
         {
             try
             {
@@ -165,7 +159,7 @@ namespace FS_Dynamic
 
             }
         }
-        private void Yellow(object sender, RoutedEventArgs e)
+        private void Yellow(object sender, RoutedEventArgs e) // Режим желтых линий
         {
             sp.Write("y");
             Dispatcher.Invoke(() => TextIn.Text = ready);
@@ -188,27 +182,27 @@ namespace FS_Dynamic
 
 
 
-        private void Bust_Click(object sender, RoutedEventArgs e)
+        private void Bust_Click(object sender, RoutedEventArgs e) //Добавление баста
         {
             bust_q++;
             Bust_Q.Text = bust_q.ToString();
             sp.Write("b");
         }
 
-        private void Bust_min_Click(object sender, RoutedEventArgs e)
+        private void Bust_min_Click(object sender, RoutedEventArgs e) //Снятие баста
         {
             bust_q--;
             Bust_Q.Text = bust_q.ToString();
         }
 
-        private void Skip_plus_Click(object sender, RoutedEventArgs e)
+        private void Skip_plus_Click(object sender, RoutedEventArgs e) //Добавление скипа
         {
             skip_q++;
             Skip_Q.Text = skip_q.ToString();
             sp.Write("b");
         }
 
-            private void Skip_min_Click(object sender, RoutedEventArgs e)
+            private void Skip_min_Click(object sender, RoutedEventArgs e) //Снятие скипа
         {
             skip_q--;
             Skip_Q.Text = skip_q.ToString();
@@ -294,7 +288,7 @@ namespace FS_Dynamic
 
             }
             else
-            {
+            { //Штрафы отсутствуют
                 resultwithbusts = ts_0.ToString("hh\\:mm\\:ss\\:fff");
                 string time = ts_0.ToString("hh\\:mm\\:ss\\:fff");
                 Result_plus_Busts.Text = resultwithbusts;
@@ -337,7 +331,7 @@ namespace FS_Dynamic
             }
         }
 
-        private void Rounds_Loaded(object sender, RoutedEventArgs e)
+        private void Rounds_Loaded(object sender, RoutedEventArgs e) // Загрузка названий раундов
         {
             StreamReader reader_1 = new StreamReader(path_rounds);
             string x = reader_1.ReadToEnd();
@@ -348,7 +342,7 @@ namespace FS_Dynamic
             }
         }
 
-        private void Stop_Round_Click(object sender, RoutedEventArgs e)
+        private void Stop_Round_Click(object sender, RoutedEventArgs e) // Кнопка окончания раунда
         {
             sp.Write("f");
             stopWatch.Stop();
@@ -362,7 +356,7 @@ namespace FS_Dynamic
 
         }
 
-        private void Print()
+        private void Print() // Сохранение данных срабатывания датчика
         {
             string result_each_tuch = ts_0.ToString("hh\\:mm\\:ss\\:fff");
             string result_each_tuch_1 = result_each_tuch;
@@ -374,17 +368,17 @@ namespace FS_Dynamic
         }
         
 
-        private void Lines_ON_Click(object sender, RoutedEventArgs e)
+        private void Lines_ON_Click(object sender, RoutedEventArgs e) // Включние линий синяя-зеленая
         {
             sp.Write("g");
         }
 
-        private void Red_Signal_Click(object sender, RoutedEventArgs e)
+        private void Red_Signal_Click(object sender, RoutedEventArgs e) // Моргание линий красным цветом
         {
             sp.Write("r");
         }
 
-        private void Open_Demo(object sender, RoutedEventArgs e)
+        private void Open_Demo(object sender, RoutedEventArgs e) // Открытие демонстрационного окна
         {
             try
             { 
