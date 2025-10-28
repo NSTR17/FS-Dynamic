@@ -20,21 +20,19 @@
             </Border.Effect>
 
             <Grid Margin="0,0,89,32">
-                <TextBlock x:Name="Result_Demo" HorizontalAlignment="Left" Margin="100,109,0,163" TextWrapping="Wrap" Width="196" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" Text="00:00:000&#xA;" FontWeight="Bold" Height="53"/>
+                <TextBlock x:Name="Result_Demo" HorizontalAlignment="Left" Margin="100,109,0,163" TextWrapping="Wrap" Width="196" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" Text="00:000&#xA;" FontWeight="Bold" Height="53"/>
                 <TextBlock x:Name="Team_Name" HorizontalAlignment="Left" Margin="87,78,0,177" TextWrapping="Wrap" Width="196" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" Text="Team" FontWeight="Bold" Height="53"/>
+                <TextBlock x:Name="Round_Number" HorizontalAlignment="Left" Margin="87,51,0,204" TextWrapping="Wrap" Width="196" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" Text="Number" FontWeight="Bold" Height="53"/>
                 <Label Margin="61,109,431,173" Content="Clear Time:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC" Grid.ColumnSpan="2"/>
                 <TextBox x:Name= "Bust_Q" HorizontalAlignment="Left" Margin="160,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Height="36" FontSize="20" Text="0" TextAlignment="Center" Foreground="#FFDCDBDB"/>
                 <TextBox x:Name= "Skip_Q" HorizontalAlignment="Left" Margin="160,181,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Height="36" FontSize="20" Text="0" TextAlignment="Center" Foreground="#FFDCDBDB"/>
                 <Label Margin="68,150,424,132" Content="Busts:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC"/>
                 <Label Margin="68,191,424,91" Content="Skips:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC"/>
-                <TextBlock x:Name="Result_plus_Busts" HorizontalAlignment="Left" Margin="100,233,0,0" TextWrapping="Wrap" Text="00:00:000" VerticalAlignment="Top" Width="196" Height="53" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="Result_plus_Busts" HorizontalAlignment="Left" Margin="100,233,0,0" TextWrapping="Wrap" Text="00:000" VerticalAlignment="Top" Width="196" Height="53" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" FontWeight="Bold"/>
                 <Label Margin="61,233,431,49" Content="Final Time:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC"/>
                 <Label Margin="61,78,431,204" Content="Team:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC"/>
-                <Button x:Name="Update" Content="Update" Margin="61,41,442,235" Foreground="#DDFDFDFC" Background="#FF373240" Height="32" Click="Refresh"/>
-                <ListView x:Name="listofResults" Margin="267,0,126,22" BorderBrush="#FFF90B00" />
-                <ListView x:Name="listofTimers" Margin="465,0,-72,22" BorderBrush="#FFF90B00" />
-                <Button x:Name="Reload_Data" Content="Reload" Margin="160,41,343,235" Foreground="#DDFDFDFC" Background="#FF373240" Height="32" Click="StartFunction" RenderTransformOrigin="1.341,0.657"/>
-                <TextBlock x:Name="Test" HorizontalAlignment="Left" Margin="100,308,0,0" TextWrapping="Wrap" Text="Test" VerticalAlignment="Top" Width="196" Height="53" OpacityMask="#FFF9F9F9" Foreground="#FFDCDBDB" FontSize="20" TextAlignment="Center" FontWeight="Bold"/>
+                <Label Margin="61,52,431,230" Content="Round:" FontSize="16" RenderTransformOrigin="0.414,0.155" FontWeight="Bold" Foreground="#E5FFFCFC"/>
+                
 
             </Grid>
         </Border>

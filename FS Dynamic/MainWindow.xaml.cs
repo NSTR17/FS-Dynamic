@@ -62,13 +62,27 @@ namespace FS_Dynamic
         Timer timer_db_on = new Timer(FlagOn);
         Timer timer_db_off = new Timer(FlagOff);
 
+        // Ниже свойства для доступа из DemoWindow
+        public string TimeValue => Result.Text;
+        public string FinalTimeValue => Result_plus_Busts.Text;
+        public string BustValue => Bust_Q.Text;
+        public string SkipValue => Skip_Q.Text;
+        public string SelectedTeam => Team_Name.SelectedItem?.ToString() ?? "Команда не выбрана";
+        public string SelectedRound => Rounds.SelectedItem?.ToString() ?? "Не выбран";
+
+        public event Action DataUpdated; // Событие для уведомления об изменении данных
+
+        private DispatcherTimer decorativeTimer;
+
+
 
         public MainWindow()
         {
             InitializeComponent();
+            InitializeDecorativeTimer();
 
             db = new ApplicationContext();// Соединение с БД
-                                   
+
 
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
@@ -101,14 +115,12 @@ namespace FS_Dynamic
             {
                 case "on":
                     stopWatch.Start();
-                    ParameterizedThreadStart timer = new ParameterizedThreadStart(Timer);
-                    Thread thread = new Thread(Timer);
-                    st_timer = true;
-                    thread.Start((object)st_timer);
-                   
-                    db.Timers.Add(timer_db_on);
-                    db.SaveChanges();
+                    StartDecorativeTimer();
                     
+
+                    //db.Timers.Add(timer_db_on);
+                    //db.SaveChanges();
+
                     break;
                 case "off":
                     TimeSpan ts = stopWatch.Elapsed;
@@ -117,48 +129,21 @@ namespace FS_Dynamic
                     off_q++;
                     if (off_q == 2)
                     {
-                        stop_timer.Set();
-
-                        db.Timers.Remove(timer_db_on);
-                        db.SaveChanges();
+                        StopDecorativeTimer();
                         
-                        db.Timers.Add(timer_db_off);
-                        db.SaveChanges();
+                        
+                        //db.Timers.Remove(timer_db_on);
+                        //db.SaveChanges();
+
+                        //db.Timers.Add(timer_db_off);
+                        //db.SaveChanges();
                     }
                     break;
             }
 
         }
 
-        private void Timer(object argument) //Декоративный таймер
-        {
-            try
-            {
-                while (st_timer)
-                {
-                    if (stop_timer.WaitOne(0))
-                    {
-                        timer_1 = timer_2;
-                        return;
-                    }
-                    stopWatch.Start();
-                    TimeSpan rs = stopWatch.Elapsed;
-                    string elapsedTime_Timer = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                    rs.Hours, rs.Minutes, rs.Seconds, rs.Milliseconds);
-
-                    Dispatcher.Invoke(() => Result.Text = elapsedTime_Timer);
-
-
-
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-
-            }
-        }
+       
         private void Yellow(object sender, RoutedEventArgs e) // Режим желтых линий
         {
             sp.Write("y");
@@ -170,7 +155,7 @@ namespace FS_Dynamic
             bust_q = 0;
             skip_q = 0;
             off_q = 0;
-            Team_Name.SelectedIndex ++;
+            Team_Name.SelectedIndex++;
             Data.Choosen_TeamName = Team_Name.Text;
         }
 
@@ -187,12 +172,14 @@ namespace FS_Dynamic
             bust_q++;
             Bust_Q.Text = bust_q.ToString();
             sp.Write("b");
+            OnDataUpdated();
         }
 
         private void Bust_min_Click(object sender, RoutedEventArgs e) //Снятие баста
         {
             bust_q--;
             Bust_Q.Text = bust_q.ToString();
+            OnDataUpdated();
         }
 
         private void Skip_plus_Click(object sender, RoutedEventArgs e) //Добавление скипа
@@ -200,12 +187,14 @@ namespace FS_Dynamic
             skip_q++;
             Skip_Q.Text = skip_q.ToString();
             sp.Write("b");
+            OnDataUpdated();
         }
 
-            private void Skip_min_Click(object sender, RoutedEventArgs e) //Снятие скипа
+        private void Skip_min_Click(object sender, RoutedEventArgs e) //Снятие скипа
         {
             skip_q--;
             Skip_Q.Text = skip_q.ToString();
+            OnDataUpdated();
         }
 
         private void Result_Time_Click(object sender, RoutedEventArgs e)
@@ -218,8 +207,8 @@ namespace FS_Dynamic
 
                 TimeSpan ts_bust_v = TimeSpan.FromSeconds(ts_bust.Seconds * (bust_q));
                 TimeSpan overall = ts_bust_v.Add(ts_0);
-                string time = ts_0.ToString("hh\\:mm\\:ss\\:fff");
-                resultwithbusts = overall.ToString("hh\\:mm\\:ss\\:fff");
+                string time = $"{(int)ts_0.TotalSeconds:00}:{ts_0.Milliseconds:000}";
+                resultwithbusts = $"{(int)overall.TotalSeconds:00}:{overall.Milliseconds:000}";
 
                 Result_plus_Busts.Text = resultwithbusts;
                 team_name = Team_Name.Text;
@@ -236,6 +225,7 @@ namespace FS_Dynamic
                 Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
                 db.Results.Add(result);
                 db.SaveChanges();
+                OnDataUpdated();
 
             }
             else if (bust_q == 0 && skip_q != 0)
@@ -243,9 +233,8 @@ namespace FS_Dynamic
 
                 TimeSpan ts_skip_v = TimeSpan.FromSeconds(ts_skip.Seconds * (skip_q));
                 TimeSpan overall = ts_skip_v.Add(ts_0);
-                string time = ts_0.ToString("hh\\:mm\\:ss\\:fff");
-                resultwithbusts = overall.ToString("hh\\:mm\\:ss\\:fff");
-
+                string time = $"{(int)ts_0.TotalSeconds:00}:{ts_0.Milliseconds:000}";
+                resultwithbusts = $"{(int)overall.TotalSeconds:00}:{overall.Milliseconds:000}";
                 Result_plus_Busts.Text = resultwithbusts;
                 team_name = Team_Name.Text;
                 round_number = Rounds.Text;
@@ -260,15 +249,16 @@ namespace FS_Dynamic
                 Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
                 db.Results.Add(result);
                 db.SaveChanges();
+                OnDataUpdated();
             }
             else if (bust_q != 0 && skip_q != 0)
             { //Басты и скипы есть
                 TimeSpan ts_skip_v = TimeSpan.FromSeconds(ts_skip.Seconds * (skip_q));
                 TimeSpan ts_bust_v = TimeSpan.FromSeconds(ts_bust.Seconds * (bust_q));
                 TimeSpan preview_overall = ts_bust_v.Add(ts_0);
-                TimeSpan overall = ts_skip_v.Add(ts_skip_v);
-                string time = ts_0.ToString("hh\\:mm\\:ss\\:fff");
-
+                TimeSpan overall = preview_overall.Add(ts_skip_v);
+                string time = $"{(int)ts_0.TotalSeconds:00}:{ts_0.Milliseconds:000}";
+                resultwithbusts = $"{(int)overall.TotalSeconds:00}:{overall.Milliseconds:000}";
                 Result_plus_Busts.Text = resultwithbusts;
                 team_name = Team_Name.Text;
                 round_number = Rounds.Text;
@@ -285,12 +275,13 @@ namespace FS_Dynamic
                 Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
                 db.Results.Add(result);
                 db.SaveChanges();
+                OnDataUpdated();
 
             }
             else
             { //Штрафы отсутствуют
-                resultwithbusts = ts_0.ToString("hh\\:mm\\:ss\\:fff");
-                string time = ts_0.ToString("hh\\:mm\\:ss\\:fff");
+                resultwithbusts = $"{(int)ts_0.TotalSeconds:00}:{ts_0.Milliseconds:000}";
+                string time = $"{(int)ts_0.TotalSeconds:00}:{ts_0.Milliseconds:000}";
                 Result_plus_Busts.Text = resultwithbusts;
                 round_number = Rounds.Text;
                 team_name = Team_Name.Text;
@@ -303,6 +294,7 @@ namespace FS_Dynamic
                 Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
                 db.Results.Add(result);
                 db.SaveChanges();
+                OnDataUpdated();
             }
 
         }
@@ -320,7 +312,7 @@ namespace FS_Dynamic
 
         void Grid_KeyDown(object sender, KeyEventArgs e)
         {//Управление с клавиатуры
-           
+
             if (e.Key == Key.OemPlus)
             {
                 Bust_Click(Bust, null);
@@ -347,12 +339,11 @@ namespace FS_Dynamic
             sp.Write("f");
             stopWatch.Stop();
             stop_timer.Set();
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts_0.Hours, ts_0.Minutes, ts_0.Seconds,
-            ts_0.Milliseconds);
+            string elapsedTime = String.Format("{0:00}:{1:000}", (int)ts_0.TotalSeconds, ts_0.Milliseconds);
             Dispatcher.Invoke(() => Result.Text = elapsedTime);
             stopWatch.Reset();
-            off_q = 0; 
+            off_q = 0;
+            OnDataUpdated();
 
         }
 
@@ -366,7 +357,7 @@ namespace FS_Dynamic
             stream.Close();
             file.Close();
         }
-        
+
 
         private void Lines_ON_Click(object sender, RoutedEventArgs e) // Включние линий синяя-зеленая
         {
@@ -381,17 +372,53 @@ namespace FS_Dynamic
         private void Open_Demo(object sender, RoutedEventArgs e) // Открытие демонстрационного окна
         {
             try
-            { 
+            {
 
-            DemoWindow demo = new DemoWindow();
-            demo.Show();
+                DemoWindow demo = new DemoWindow(this);
+                demo.Show();
             }
 
             catch (Exception ex)
-            { 
+            {
                 MessageBox.Show(ex.Message);
             }
 
         }
+
+        private void OnDataUpdated() // Метод обновления данных
+        {
+            DataUpdated?.Invoke();
+        }
+
+        private void InitializeDecorativeTimer() // Инициализация декоративного таймера
+        {
+            decorativeTimer = new DispatcherTimer();
+            decorativeTimer.Interval = TimeSpan.FromMilliseconds(30);
+            decorativeTimer.Tick += (s, e) => UpdateDecorativeDisplay();
+        }
+
+        private void StartDecorativeTimer() // Запуск декоративного таймера
+        {
+            decorativeTimer.Start();
+        }
+
+        private void StopDecorativeTimer() // Останов декоративного таймера
+        { 
+            decorativeTimer?.Stop();
+        }
+
+        private void UpdateDecorativeDisplay() // Вывод данных декоративного таймера в UI
+        {
+            if (stopWatch.IsRunning)
+            {
+                TimeSpan rs = stopWatch.Elapsed;
+                string elapsedTime = $"{(int)rs.TotalSeconds:00}:{rs.Milliseconds:000}";
+
+                Result.Text = elapsedTime; // Декоративное отображение
+                OnDataUpdated(); // Уведомление в Demo окно
+            }
+        }
     }
+
+
 }
