@@ -30,9 +30,7 @@ namespace FS_Dynamic
     /// </summary>
     public partial class MainWindow : Window
     {
-        ApplicationContext db;
-
-
+      
         SerialPort sp = new SerialPort();
         string[] ports = SerialPort.GetPortNames();
         Stopwatch stopWatch = new Stopwatch();
@@ -59,8 +57,7 @@ namespace FS_Dynamic
         TimeSpan interval = new TimeSpan(0, 0, 0, 0, 1);
         const int FlagOn = 1;
         const int FlagOff = 0;
-        Timer timer_db_on = new Timer(FlagOn);
-        Timer timer_db_off = new Timer(FlagOff);
+        
 
         // Ниже свойства для доступа из DemoWindow
         public string TimeValue => Result.Text;
@@ -81,9 +78,7 @@ namespace FS_Dynamic
             InitializeComponent();
             InitializeDecorativeTimer();
 
-            db = new ApplicationContext();// Соединение с БД
-
-
+            
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
         }
@@ -116,11 +111,7 @@ namespace FS_Dynamic
                 case "on":
                     stopWatch.Start();
                     StartDecorativeTimer();
-                    
-
-                    //db.Timers.Add(timer_db_on);
-                    //db.SaveChanges();
-
+                                       
                     break;
                 case "off":
                     TimeSpan ts = stopWatch.Elapsed;
@@ -130,13 +121,8 @@ namespace FS_Dynamic
                     if (off_q == 2)
                     {
                         StopDecorativeTimer();
-                        
-                        
-                        //db.Timers.Remove(timer_db_on);
-                        //db.SaveChanges();
-
-                        //db.Timers.Add(timer_db_off);
-                        //db.SaveChanges();
+                                         
+                       
                     }
                     break;
             }
@@ -221,10 +207,7 @@ namespace FS_Dynamic
                 stream.WriteLine(OverAllResult);
                 stream.Close();
                 file.Close();
-
-                Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
-                db.Results.Add(result);
-                db.SaveChanges();
+                               
                 OnDataUpdated();
 
             }
@@ -246,9 +229,7 @@ namespace FS_Dynamic
                 stream.WriteLine(OverAllResult);
                 stream.Close();
                 file.Close();
-                Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
-                db.Results.Add(result);
-                db.SaveChanges();
+               
                 OnDataUpdated();
             }
             else if (bust_q != 0 && skip_q != 0)
@@ -272,9 +253,7 @@ namespace FS_Dynamic
                 stream.WriteLine(OverAllResult);
                 stream.Close();
                 file.Close();
-                Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
-                db.Results.Add(result);
-                db.SaveChanges();
+               
                 OnDataUpdated();
 
             }
@@ -291,9 +270,7 @@ namespace FS_Dynamic
                 stream.WriteLine(teamname_result);
                 stream.Close();
                 file.Close();
-                Result result = new Result(team_name, time, bust_q, skip_q, resultwithbusts);
-                db.Results.Add(result);
-                db.SaveChanges();
+                
                 OnDataUpdated();
             }
 
