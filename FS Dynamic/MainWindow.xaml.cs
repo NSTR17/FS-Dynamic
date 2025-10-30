@@ -22,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Threading;
 using System.Timers;
+using FS_Dynamic.Models;
 
 namespace FS_Dynamic
 {
@@ -30,7 +31,8 @@ namespace FS_Dynamic
     /// </summary>
     public partial class MainWindow : Window
     {
-      
+        public User CurrentUser { get; private set; }
+
         SerialPort sp = new SerialPort();
         string[] ports = SerialPort.GetPortNames();
         Stopwatch stopWatch = new Stopwatch();
@@ -73,14 +75,20 @@ namespace FS_Dynamic
 
 
 
-        public MainWindow()
+        public MainWindow(User user)
         {
             InitializeComponent();
+            InitializeAdminInterface();
             InitializeDecorativeTimer();
 
             
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
+        }
+
+        private void InitializeAdminInterface()
+        { 
+            Title = $"FS Dynamic - Админ: {CurrentUser.FullName}";
         }
 
         private void COM_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -54,6 +54,7 @@ namespace FS_Dynamic
                     break;
                 case "athlete":
                     mainWindow = new AthleteWindow(user);
+                    break;
                 default:
                     MessageBox.Show($"Неизвестная роль: {user.Role}", "Ошибка");
                     Current.Shutdown();
