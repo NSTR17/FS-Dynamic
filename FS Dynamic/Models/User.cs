@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FS_Dynamic.Models
 {
-    internal class User
+    public class User
     {
         /// <summary>
         /// Класс для представления пользователя системы

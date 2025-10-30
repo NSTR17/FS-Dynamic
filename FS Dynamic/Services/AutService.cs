@@ -13,12 +13,12 @@ namespace FS_Dynamic.Services
     /// Сервис для взаимодействия с API авторизации
     /// Отвечает за отправку запросов на сервер и обработку ответов
     /// </summary>
-    internal class AutService
+    internal class AuthService
     {
         private readonly string _apiBaseUrl = "http://localhost/fs_dynamic/api/"; // Базовый URL нашего API
         private readonly HttpClient _httpClient;  // HttpClient - класс для отправки HTTP запросов
 
-        public AutService()
+        public AuthService()
         { 
             _httpClient = new HttpClient(); 
             _httpClient.Timeout = TimeSpan.FromMilliseconds(30); // максимальное время ожидания ответа от сервера
