@@ -102,6 +102,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AthleteWindow.xaml.cs">
+      <DependentUpon>AthleteWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="DemoWindow.xaml.cs">
       <DependentUpon>DemoWindow.xaml</DependentUpon>
@@ -111,7 +114,14 @@
     </Compile>
     <Compile Include="Models\AuthResponce.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="OperatorWindow.xaml.cs">
+      <DependentUpon>OperatorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\AutService.cs" />
+    <Page Include="AthleteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DemoWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +142,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OperatorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
