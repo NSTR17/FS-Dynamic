@@ -1,12 +1,51 @@
 ﻿<Window x:Class="FS_Dynamic.OperatorWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FS_Dynamic"
         mc:Ignorable="d"
-        Title="OperatorWindow" Height="450" Width="800">
-    <Grid>
-        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="FS Dynamic" Height="400" Width="400" Icon="/FS_Logo.jpg" Topmost="True" Background="#FF4C4343">
+    <Grid Cursor="">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="14*"/>
+        </Grid.ColumnDefinitions>
+        <Border Height="350" Width="370" Margin="15,17,15,17" Padding="30" CornerRadius="20" Cursor="" Grid.ColumnSpan="2">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF009999" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0" />
+            </Border.Effect>
+
+            <Grid>
+                <ComboBox x:Name="COM" HorizontalAlignment="Left" Margin="25,-56,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="COM_SelectionChanged" Height="22" Background="#00000000" Grid.ColumnSpan="2"/>
+                <ComboBox x:Name= "Team_Name" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
+                
+                <StackPanel>
+                    <TextBlock Text=" Training mode" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,30" Width="150" Height="30">
+                        <TextBlock.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="1"/>
+                                <GradientStop Color="#FF373240"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Background>
+                    </TextBlock>
+                    <TextBlock Text="Time" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="txtStopWatch" Text="00:000" FontWeight="Bold" Height="30" FontSize="20" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,15" />
+                    <TextBlock Text="Previos Time" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="txtPrevTime"  Text="00:000" FontWeight="Bold" Height="30" FontSize="20" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,10"/>
+                    <Button x:Name="Refresh" Content="Start" Height="40" Foreground="#DDFDFDFC" Background="#FF373240" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Click="BtnStart_Click"/>
+                    <Button x:Name="Lines" Content="Lines" Height="40" Foreground="#DDFDFDFC" Background="#FF22D20A" FontSize="16" FontWeight="Bold" Click="BtnLines_Click"/>
+                </StackPanel>
+                <ComboBox x:Name= "Discipline" HorizontalAlignment="Left" Margin="180,31,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
+            </Grid>
+        </Border>
+
     </Grid>
 </Window>

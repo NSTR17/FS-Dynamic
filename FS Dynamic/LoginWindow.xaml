@@ -23,7 +23,7 @@
                 <StackPanel>
                     <TextBlock Text="FS Dynamic" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,30"/>
                     <TextBlock Text="Логин" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,5"/>
-                    <TextBlock x:Name="txtLogin" Text="admin" Height="30" FontSize="14" Foreground="#E5FFFCFC" Margin="0,0,0,15" />
+                    <TextBox x:Name="txtLogin" Text="admin" Height="30" FontSize="14" Foreground="#E5FFFCFC" Margin="0,0,0,15" />
                     <TextBlock Text="Пароль" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,5"/>
                     <PasswordBox  x:Name="txtPassord" Password="Password" Height="30" FontSize="14" Foreground="#E5FFFCFC" Margin="0,0,0,25"/>
                     <Button x:Name="btnLogin" Content="Войти" Height="40" Background="#FF5E17DC" FontSize="16" FontWeight="Bold" Click="BtnLogin_Click"/>

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using FS_Dynamic.Models;
 
 namespace FS_Dynamic
 {
@@ -19,7 +20,8 @@ namespace FS_Dynamic
     /// </summary>
     public partial class AthleteWindow : Window
     {
-        public AthleteWindow()
+        public User CurrentUser { get; private set; }
+        public AthleteWindow(User user)
         {
             InitializeComponent();
         }

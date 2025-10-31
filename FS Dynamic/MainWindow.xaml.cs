@@ -45,8 +45,7 @@ namespace FS_Dynamic
         string resultwithbusts;
         DateTime timer_1 = new DateTime(0, 0);
         DateTime timer_2 = new DateTime(0, 0);
-        bool st_timer = false;
-        AutoResetEvent stop_timer = new AutoResetEvent(false);
+        
         string path = "C:\\+\\FS_Arduino\\Results.txt";
         string path_teams = "C:\\+\\FS_Arduino\\Teams.txt";
         string path_each_tuch = "C:\\+\\FS_Arduino\\Result_each_tuch.txt";
@@ -142,8 +141,8 @@ namespace FS_Dynamic
         {
             sp.Write("y");
             Dispatcher.Invoke(() => TextIn.Text = ready);
-            Result.Text = "00:00:000";
-            Result_plus_Busts.Text = "00:00:000";
+            Result.Text = "00:000";
+            Result_plus_Busts.Text = "00:000";
             Bust_Q.Text = "0";
             Skip_Q.Text = "0";
             bust_q = 0;
@@ -323,7 +322,6 @@ namespace FS_Dynamic
         {
             sp.Write("f");
             stopWatch.Stop();
-            stop_timer.Set();
             string elapsedTime = String.Format("{0:00}:{1:000}", (int)ts_0.TotalSeconds, ts_0.Milliseconds);
             Dispatcher.Invoke(() => Result.Text = elapsedTime);
             stopWatch.Reset();
