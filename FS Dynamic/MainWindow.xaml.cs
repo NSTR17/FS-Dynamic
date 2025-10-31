@@ -31,7 +31,7 @@ namespace FS_Dynamic
     /// </summary>
     public partial class MainWindow : Window
     {
-        public User CurrentUser { get; private set; }
+        
 
         SerialPort sp = new SerialPort();
         string[] ports = SerialPort.GetPortNames();
@@ -74,21 +74,17 @@ namespace FS_Dynamic
 
 
 
-        public MainWindow(User user)
+        public MainWindow()
         {
             InitializeComponent();
-            InitializeAdminInterface();
+            
             InitializeDecorativeTimer();
-
+            
             
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
         }
-
-        private void InitializeAdminInterface()
-        { 
-            Title = $"FS Dynamic - Админ: {CurrentUser.FullName}";
-        }
+               
 
         private void COM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

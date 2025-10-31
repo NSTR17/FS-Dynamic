@@ -20,8 +20,8 @@ namespace FS_Dynamic
     /// </summary>
     public partial class AthleteWindow : Window
     {
-        public User CurrentUser { get; private set; }
-        public AthleteWindow(User user)
+        
+        public AthleteWindow()
         {
             InitializeComponent();
         }

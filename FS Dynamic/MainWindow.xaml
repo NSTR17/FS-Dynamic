@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FS_Dynamic"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="FS Dynamic" Height="550" Width="900" Icon="/FS_Logo.jpg" Topmost="True" Background="#FF4C4343">
+        Title="MainWindow" Height="550" Width="900" Icon="/FS_Logo.jpg" Topmost="True" Background="#FF4C4343">
     <Grid Cursor="">
         <Border Height="400" Width="740" Margin="15" Padding="30" VerticalAlignment="Stretch" CornerRadius="50" Cursor="">
             <Border.Background>

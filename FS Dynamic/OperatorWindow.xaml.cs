@@ -23,8 +23,7 @@ namespace FS_Dynamic
     /// </summary>
     public partial class OperatorWindow : Window
     {
-        public User CurrentUser { get; private set; }
-
+        
         SerialPort sp = new SerialPort();
         string[] ports = SerialPort.GetPortNames();
         DispatcherTimer decorativeTimer;
@@ -34,7 +33,7 @@ namespace FS_Dynamic
         int off_Quantity_Value;
         int off_Quantity_Counter = 0;
 
-        public OperatorWindow(User user)
+        public OperatorWindow()
         {
             InitializeComponent();
 

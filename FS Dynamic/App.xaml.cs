@@ -19,48 +19,41 @@ namespace FS_Dynamic
         /// Здесь решаем какое окно открывать
         /// </summary>
         /// 
+        
         private void Application_Startup(object sender, StartupEventArgs e)
-        { 
+        {
             var loginWindow = new LoginWindow();
             bool? loginResult = loginWindow.ShowDialog();
+            
 
             if (loginResult == true && loginWindow.CurrentUser != null)
             {
-                OpenMainWindowBasedOnRole(loginWindow.CurrentUser);
+                switch (loginWindow.CurrentUser.Role.ToLower())
+                {
+                    case "admin":
+                        var mainwindow = new MainWindow();
+                        mainwindow.Show();
+                        break;
+                    case "operator":
+                        new OperatorWindow().Show();
+                        break;
+                    case "athlete":
+                        new AthleteWindow().Show();
+                        break;
+                    default:
+                        MessageBox.Show($"Неизвестная роль: {loginWindow.CurrentUser.Role}");
+                        Current.Shutdown();
+                        break;
+                }
             }
             else
             { 
                 Current.Shutdown();
             }
         }
+        
 
-        /// <summary>
-        /// Открывает главное окно в зависимости от роли пользователя
-        /// </summary>
-        /// <param name="user">Авторизованный пользователь</param>
-        /// 
 
-        private void OpenMainWindowBasedOnRole(User user)
-        {
-            Window mainWindow;
-
-            switch (user.Role.ToLower())
-            {
-                case "admin":
-                    mainWindow = new MainWindow(user);
-                    break;
-                case "operator":
-                    mainWindow = new OperatorWindow(user);
-                    break;
-                case "athlete":
-                    mainWindow = new AthleteWindow(user);
-                    break;
-                default:
-                    MessageBox.Show($"Неизвестная роль: {user.Role}", "Ошибка");
-                    Current.Shutdown();
-                    return;
-            }
-            mainWindow.Show();
-        }
+        
     }
 }
