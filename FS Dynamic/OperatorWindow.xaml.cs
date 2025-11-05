@@ -30,14 +30,16 @@ namespace FS_Dynamic
         Stopwatch stopWatch = new Stopwatch();
         TimeSpan ts = new TimeSpan();
         TimeSpan ts_0 = new TimeSpan();
-        int off_Quantity_Value;
+        int off_Quantity_Value = 2;
         int off_Quantity_Counter = 0;
+        string res;
+        string set = "Set";
 
         public OperatorWindow()
         {
             InitializeComponent();
 
-
+            InitializeDecorativeTimer();
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
         }
@@ -45,26 +47,29 @@ namespace FS_Dynamic
 
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string res = sp.ReadExisting();
-            switch (res)
-            {
-                case "on":
-                    stopWatch.Start();
-                    StartDecorativeTimer();
+            Dispatcher.Invoke(() => TextIn.Text = res = sp.ReadExisting());
+           
+            
+                switch (res)
+                {
+                    case "on":
+                        stopWatch.Start();
+                        StartDecorativeTimer();
 
-                    break;
-                case "off":
-                    TimeSpan ts = stopWatch.Elapsed;
-                    ts_0 = ts;
-                    off_Quantity_Counter++;
-                    if (off_Quantity_Counter == off_Quantity_Value)
-                    {
-                        StopDecorativeTimer();                     
-                    }
-                    break;
+                        break;
+                    case "off":
+                        TimeSpan ts = stopWatch.Elapsed;
+                        ts_0 = ts;
+                        off_Quantity_Counter++;
+                        if (off_Quantity_Counter == off_Quantity_Value)
+                        {
+                            StopDecorativeTimer();
+                        }
+                        break;
 
-            }
-              
+                }
+            
+
         }
 
         private void InitializeDecorativeTimer() // Инициализация декоративного таймера
@@ -104,19 +109,31 @@ namespace FS_Dynamic
                 stopWatch.Stop();
                 string elapsedTime = String.Format("{0:00}:{1:000}", (int)ts_0.TotalSeconds, ts_0.Milliseconds);
                 Dispatcher.Invoke(() => txtPrevTime.Text = elapsedTime);
+                Dispatcher.Invoke(() => txtStopWatch.Text = "00:000");
                 stopWatch.Reset();
                 off_Quantity_Counter = 0;
+                sp.Write("f");
+                System.Threading.Thread.Sleep(500);
+                sp.Write("y");
+                System.Threading.Thread.Sleep(500);
                 sp.Write("w");
+                Dispatcher.Invoke(() => TextIn.Text = set);
+
             }
             else
-            { 
+            {
+                sp.Write("y");
+                System.Threading.Thread.Sleep(500);
                 sp.Write("w");
+                Refresh.Content = "Restart";
+                Dispatcher.Invoke(() => TextIn.Text = set);
             }
         }
 
         private void BtnLines_Click(object sender, RoutedEventArgs e)
         {
             sp.Write("g");
+            Refresh.Content = "Start";
         }
 
         private void COM_SelectionChanged(object sender, SelectionChangedEventArgs e)

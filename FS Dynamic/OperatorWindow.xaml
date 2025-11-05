@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FS_Dynamic"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="FS Dynamic" Height="400" Width="400" Icon="/FS_Logo.jpg" Topmost="True" Background="#FF4C4343">
+        Title="FS Dynamic" Height="450" Width="400" Icon="/FS_Logo.jpg" Topmost="True" Background="#FF4C4343">
     <Grid Cursor="">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="11*"/>
@@ -28,6 +28,7 @@
                 <ComboBox x:Name= "Team_Name" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
                 
                 <StackPanel>
+
                     <TextBlock Text=" Training mode" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,30" Width="150" Height="30">
                         <TextBlock.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -46,6 +47,7 @@
                 <ComboBox x:Name= "Discipline" HorizontalAlignment="Left" Margin="180,31,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
             </Grid>
         </Border>
+        <TextBlock x:Name="TextIn" Grid.Column="1" HorizontalAlignment="Left" Margin="82,5,0,0" TextWrapping="Wrap" Text="Status" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
