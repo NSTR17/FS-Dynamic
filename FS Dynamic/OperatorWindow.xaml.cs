@@ -132,6 +132,7 @@ namespace FS_Dynamic
 
         private void BtnLines_Click(object sender, RoutedEventArgs e)
         {
+            sp.Write("f");
             sp.Write("g");
             Refresh.Content = "Start";
         }
