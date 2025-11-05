@@ -76,13 +76,19 @@ namespace FS_Dynamic
 
         public MainWindow()
         {
-            InitializeComponent();
-            
-            InitializeDecorativeTimer();
-            
-            
-            COM.ItemsSource = ports;
-            sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("=== MainWindow Конструктор НАЧАЛО ===");
+                InitializeComponent();
+                System.Diagnostics.Debug.WriteLine("=== MainWindow Конструктор УСПЕХ ===");
+                InitializeDecorativeTimer();
+
+
+                COM.ItemsSource = ports;
+                sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
+            }
+            catch (Exception ex)
+            { System.Diagnostics.Debug.WriteLine($"💥 ОШИБКА в MainWindow: {ex}"); }
         }
                
 

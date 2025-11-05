@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
+﻿using FS_Dynamic.Models;
 using FS_Dynamic.Services;
-using FS_Dynamic.Models;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace FS_Dynamic
 {
@@ -29,8 +30,12 @@ namespace FS_Dynamic
         /// </summary>
         private async void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
+
             var login = txtLogin.Text.Trim();
-            var password = txtPassord.Password;
+            var password = txtPassword.Password;
+
+            System.Diagnostics.Debug.WriteLine("=== Login Attempt ===");
+            System.Diagnostics.Debug.WriteLine($"Login: '{txtLogin.Text}', Password: '{txtPassword.Password}'");
 
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
@@ -46,7 +51,7 @@ namespace FS_Dynamic
                 if (result.Success)
                 {
                     CurrentUser = result.User;
-                    DialogResult = true;
+                    this.DialogResult = true;
 
                     Close();
                 }
@@ -64,6 +69,9 @@ namespace FS_Dynamic
                 SetLoadingState(false);
             }
         }
+
+
+
         /// <summary>
         /// Управляет состоянием элементов при загрузке
         /// </summary>
@@ -76,7 +84,7 @@ namespace FS_Dynamic
             progressBar.Visibility = isLoading ? Visibility.Visible : Visibility.Collapsed;
 
             txtLogin.IsEnabled = !isLoading;
-            txtPassord.IsEnabled = !isLoading;
+            txtPassword.IsEnabled = !isLoading;
         }
         /// <summary>
         /// Показывает сообщение об ошибке

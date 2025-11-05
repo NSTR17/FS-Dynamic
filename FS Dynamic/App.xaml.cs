@@ -19,12 +19,12 @@ namespace FS_Dynamic
         /// Здесь решаем какое окно открывать
         /// </summary>
         /// 
-        
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             var loginWindow = new LoginWindow();
             bool? loginResult = loginWindow.ShowDialog();
-            
+
 
             if (loginResult == true && loginWindow.CurrentUser != null)
             {
@@ -47,13 +47,11 @@ namespace FS_Dynamic
                 }
             }
             else
-            { 
+            {
                 Current.Shutdown();
             }
         }
-        
 
-
-        
+  
     }
 }

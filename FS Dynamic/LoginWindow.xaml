@@ -25,7 +25,7 @@
                     <TextBlock Text="Логин" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,5"/>
                     <TextBox x:Name="txtLogin" Text="admin" Height="30" FontSize="14" Foreground="#E5FFFCFC" Margin="0,0,0,15" />
                     <TextBlock Text="Пароль" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,5"/>
-                    <PasswordBox  x:Name="txtPassord" Password="Password" Height="30" FontSize="14" Foreground="#E5FFFCFC" Margin="0,0,0,25"/>
+                    <PasswordBox  x:Name="txtPassword" Password="Password" Height="30" FontSize="14" Foreground="#E5FFFCFC" Margin="0,0,0,25"/>
                     <Button x:Name="btnLogin" Content="Войти" Height="40" Background="#FF5E17DC" FontSize="16" FontWeight="Bold" Click="BtnLogin_Click"/>
                     <ProgressBar x:Name="progressBar" Height="10" Margin="0,10,0,0" Visibility="Collapsed" IsIndeterminate="True"/>
                     <TextBlock x:Name="txtStatus" TextWrapping="Wrap" Foreground="DarkRed" Margin="0,10,0,0" Visibility="Collapsed"/>
