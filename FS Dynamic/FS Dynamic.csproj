@@ -117,7 +117,7 @@
     <Compile Include="OperatorWindow.xaml.cs">
       <DependentUpon>OperatorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\AutService.cs" />
+    <Compile Include="Services\AuthService.cs" />
     <Page Include="AthleteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
