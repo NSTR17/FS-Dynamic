@@ -113,11 +113,17 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\AuthResponce.cs" />
+    <Compile Include="Models\SaveResultResponse.cs" />
+    <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\TeamResponse.cs" />
+    <Compile Include="Models\TrainingResult.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="OperatorWindow.xaml.cs">
       <DependentUpon>OperatorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\ResultService.cs" />
+    <Compile Include="Services\TeamService.cs" />
     <Page Include="AthleteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

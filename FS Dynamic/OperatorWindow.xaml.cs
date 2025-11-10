@@ -1,4 +1,5 @@
 ﻿using FS_Dynamic.Models;
+using FS_Dynamic.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+
 
 namespace FS_Dynamic
 {
@@ -34,17 +36,22 @@ namespace FS_Dynamic
         int off_Quantity_Counter = 0;
         string res;
         string set = "Set";
+        private TeamService _teamService;
+        private List<Team> _allTeams;
 
         public OperatorWindow()
         {
             InitializeComponent();
-
+            _teamService = new TeamService();
+           
             InitializeDecorativeTimer();
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
-        }
-  
 
+            LoadDisciplines();
+            
+        }
+                
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             Dispatcher.Invoke(() => TextIn.Text = res = sp.ReadExisting());
@@ -155,5 +162,60 @@ namespace FS_Dynamic
                 MessageBox.Show(ex.Message);
             }
         }
+               
+
+        private async void Discipline_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Team_Name.SelectedItem = null;
+            if (Discipline.SelectedItem != null)
+            {
+                string selectedDiscipline = Discipline.SelectedItem as string;
+
+
+                Team_Name.IsEnabled = true;
+                Team_Name.ItemsSource = new List<string> { "Загрузка..." };
+
+                await LoadTeamByDiscipline(selectedDiscipline);
+            }
+            else 
+            {
+                Team_Name.IsEnabled = false;
+                Team_Name.ItemsSource = null;
+            }
+        }
+
+        private async Task LoadTeamByDiscipline(string discipline)
+        {
+            try
+            {
+                var teams = await _teamService.GetTeamsAsync(discipline);
+
+                if (teams.Any())
+                {
+                    Team_Name.ItemsSource = teams;
+                    Team_Name.DisplayMemberPath = "Name";
+                }
+                else
+                {
+                    Team_Name.ItemsSource = new List<string> { "Нет команд" };
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки команд: {ex.Message}");
+            }
+        }
+
+        private void LoadDisciplines()
+        { 
+            var disciplines = new List<string> { "DS", "D2W", "D4W" };
+            Discipline.ItemsSource = disciplines;
+
+            Team_Name.IsEnabled = false;
+            Team_Name.ItemsSource = null;
+        }
+
     }
 }
+

@@ -25,7 +25,7 @@
 
             <Grid>
                 <ComboBox x:Name="COM" HorizontalAlignment="Left" Margin="25,-56,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="COM_SelectionChanged" Height="22" Background="#00000000" Grid.ColumnSpan="2"/>
-                <ComboBox x:Name= "Team_Name" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
+                <ComboBox x:Name= "Discipline" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="120" Height="22" SelectionChanged="Discipline_SelectionChanged"/>
                 
                 <StackPanel>
 
@@ -44,7 +44,7 @@
                     <Button x:Name="Refresh" Content="Start" Height="40" Foreground="#DDFDFDFC" Background="#FF373240" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Click="BtnStart_Click"/>
                     <Button x:Name="Lines" Content="Lines" Height="40" Foreground="#DDFDFDFC" Background="#FF22D20A" FontSize="16" FontWeight="Bold" Click="BtnLines_Click"/>
                 </StackPanel>
-                <ComboBox x:Name= "Discipline" HorizontalAlignment="Left" Margin="180,31,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
+                <ComboBox x:Name= "Team_Name" HorizontalAlignment="Left" Margin="180,31,0,0" VerticalAlignment="Top" Width="120" Height="22" IsEditable="False"/>
             </Grid>
         </Border>
         <TextBlock x:Name="TextIn" Grid.Column="1" HorizontalAlignment="Left" Margin="82,5,0,0" TextWrapping="Wrap" Text="Status" VerticalAlignment="Top"/>
