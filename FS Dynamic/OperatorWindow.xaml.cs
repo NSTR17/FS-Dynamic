@@ -37,13 +37,15 @@ namespace FS_Dynamic
         string res;
         string set = "Set";
         private TeamService _teamService;
+        private ResultService _resultService;
         private List<Team> _allTeams;
+        private Team _selectedTeam;
 
         public OperatorWindow()
         {
             InitializeComponent();
             _teamService = new TeamService();
-           
+            _resultService = new ResultService();
             InitializeDecorativeTimer();
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
@@ -109,7 +111,7 @@ namespace FS_Dynamic
         }
 
 
-        private void BtnStart_Click(object sender, RoutedEventArgs e)
+        private async void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             if (stopWatch.IsRunning)
             {
@@ -117,6 +119,7 @@ namespace FS_Dynamic
                 string elapsedTime = String.Format("{0:00}:{1:000}", (int)ts_0.TotalSeconds, ts_0.Milliseconds);
                 Dispatcher.Invoke(() => txtPrevTime.Text = elapsedTime);
                 Dispatcher.Invoke(() => txtStopWatch.Text = "00:000");
+                await SaveTrainingResult();
                 stopWatch.Reset();
                 off_Quantity_Counter = 0;
                 sp.Write("f");
@@ -181,6 +184,7 @@ namespace FS_Dynamic
             {
                 Team_Name.IsEnabled = false;
                 Team_Name.ItemsSource = null;
+                _selectedTeam = null;
             }
         }
 
@@ -215,7 +219,106 @@ namespace FS_Dynamic
             Team_Name.IsEnabled = false;
             Team_Name.ItemsSource = null;
         }
+               
 
+        private void Team_Name_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Team_Name.SelectedItem is Team team)
+            {
+                _selectedTeam = team;
+            }
+            else 
+            {
+                _selectedTeam = null;
+            }
+        }
+
+        //private async Task SaveTrainigResult()
+        //{
+        //    if (_selectedTeam == null || Discipline.SelectedItem == null)
+        //    {
+        //        MessageBox.Show("Выберите дисциплину и команду перед сохранением");
+        //    }
+        //    try
+        //    {
+        //        var result = new TrainingResult
+        //        {
+        //            TeamId = _selectedTeam.Id,
+        //            AthleteId = _selectedTeam.AthleteId,
+        //            Discipline = Discipline.SelectedItem.ToString(),
+        //            TimeMs = (int)ts_0.TotalMilliseconds,
+        //            Busts = 0,
+        //            Skips = 0
+        //        };
+
+        //        bool succes = await _resultService.SaveTrainingResultAsync(result);
+
+        //        if (succes)
+        //        {
+        //            MessageBox.Show("Результат успешно сохранен");
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Ошибка сохранения результата");
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка {ex.Message}");
+        //    }
+        //}
+
+        private async Task SaveTrainingResult()
+        {
+            System.Diagnostics.Debug.WriteLine("=== SAVE TRAINING RESULT METHOD ===");
+
+            if (_selectedTeam == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Selected team is NULL");
+                MessageBox.Show("Выберите команду перед сохранением");
+                return;
+            }
+
+            if (Discipline.SelectedItem == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Discipline is NULL");
+                MessageBox.Show("Выберите дисциплину перед сохранением");
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"Selected Team: {_selectedTeam.Id}, Athlete: {_selectedTeam.AthleteId}");
+            System.Diagnostics.Debug.WriteLine($"Discipline: {Discipline.SelectedItem}");
+            System.Diagnostics.Debug.WriteLine($"Time: {ts_0.TotalMilliseconds}ms");
+
+            try
+            {
+                var result = new TrainingResult
+                {
+                    TeamId = _selectedTeam.Id,
+                    AthleteId = _selectedTeam.AthleteId,
+                    Discipline = Discipline.SelectedItem.ToString(),
+                    TimeMs = (int)ts_0.TotalMilliseconds,
+                    Busts = 0,
+                    Skips = 0
+                };
+
+                bool success = await _resultService.SaveTrainingResultAsync(result);
+
+                if (success)
+                {
+                    MessageBox.Show("Результат успешно сохранен!");
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка сохранения результата");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Save Exception: {ex}");
+                MessageBox.Show($"Ошибка: {ex.Message}");
+            }
+        }
     }
 }
 

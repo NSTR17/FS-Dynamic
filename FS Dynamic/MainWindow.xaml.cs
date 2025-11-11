@@ -78,12 +78,8 @@ namespace FS_Dynamic
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("=== MainWindow Конструктор НАЧАЛО ===");
                 InitializeComponent();
-                System.Diagnostics.Debug.WriteLine("=== MainWindow Конструктор УСПЕХ ===");
                 InitializeDecorativeTimer();
-
-
                 COM.ItemsSource = ports;
                 sp.DataReceived += new SerialDataReceivedEventHandler(DataRecieved);
             }
