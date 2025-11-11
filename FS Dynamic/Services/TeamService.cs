@@ -13,7 +13,7 @@ namespace FS_Dynamic.Services
     public class TeamService
     {
         private readonly HttpClient _httpClient;
-        private const string ApiBaseUrl = "http://localhost/fs-dynamic-web/api/";
+        private const string ApiBaseUrl = "http://fsdynamic.ru/fs-dynamic-web/api/";
 
         public TeamService()
         {

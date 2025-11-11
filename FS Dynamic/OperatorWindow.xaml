@@ -6,13 +6,15 @@
         xmlns:local="clr-namespace:FS_Dynamic"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="FS Dynamic" Height="450" Width="400" Icon="/FS_Logo.jpg" Topmost="True" Background="#FF4C4343">
+        Title="FS Dynamic" Height="550" Width="500" 
+        WindowStartupLocation="CenterScreen"
+        Icon="/FS_Logo.jpg" Topmost="True" Background="#FF4C4343">
     <Grid Cursor="">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="11*"/>
             <ColumnDefinition Width="14*"/>
         </Grid.ColumnDefinitions>
-        <Border Height="350" Width="370" Margin="15,17,15,17" Padding="30" CornerRadius="20" Cursor="" Grid.ColumnSpan="2">
+        <Border Height="450" Width="370" Margin="15,17,15,17" Padding="30" CornerRadius="20" Cursor="" Grid.ColumnSpan="2">
             <Border.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black"/>
@@ -41,7 +43,12 @@
                     <TextBlock x:Name="txtStopWatch" Text="00:000" FontWeight="Bold" Height="30" FontSize="20" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,15" />
                     <TextBlock Text="Previos Time" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,5"/>
                     <TextBlock x:Name="txtPrevTime"  Text="00:000" FontWeight="Bold" Height="30" FontSize="20" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,10"/>
-                    <Button x:Name="Refresh" Content="Start" Height="40" Foreground="#DDFDFDFC" Background="#FF373240" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Click="BtnStart_Click"/>
+                    <Button x:Name="Refresh" Content="Start" Height="40" Foreground="#DDFDFDFC" Background="#FF373240" FontSize="16" FontWeight="Bold" Margin="0,0,0,5" Click="BtnStart_Click"/>
+                    <StackPanel Margin="0,10,0,0">
+                        <TextBlock Text="Busts" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,0"/>
+                        <TextBlock x:Name="txtBustCount" Text="0" FontWeight="Bold" Height="30" FontSize="20" HorizontalAlignment="Center" Foreground="#E5FFFCFC" Margin="0,0,0,5"/>
+                        <Button x:Name="BtnBust" Content="+ Bust" Height="30" Foreground="#DDFDFDFC" Background="#FFE74C3C" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" Click="BtnBust_Click"/>
+                    </StackPanel>
                     <Button x:Name="Lines" Content="Lines" Height="40" Foreground="#DDFDFDFC" Background="#FF22D20A" FontSize="16" FontWeight="Bold" Click="BtnLines_Click"/>
                 </StackPanel>
                 <ComboBox x:Name= "Team_Name" HorizontalAlignment="Left" Margin="180,31,0,0" VerticalAlignment="Top" Width="120" Height="22" IsEditable="False" SelectionChanged="Team_Name_SelectionChanged"/>

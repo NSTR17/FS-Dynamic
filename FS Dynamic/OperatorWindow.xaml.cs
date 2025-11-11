@@ -32,7 +32,7 @@ namespace FS_Dynamic
         Stopwatch stopWatch = new Stopwatch();
         TimeSpan ts = new TimeSpan();
         TimeSpan ts_0 = new TimeSpan();
-        int off_Quantity_Value = 2;
+        int off_Quantity_Value;
         int off_Quantity_Counter = 0;
         string res;
         string set = "Set";
@@ -40,6 +40,7 @@ namespace FS_Dynamic
         private ResultService _resultService;
         private List<Team> _allTeams;
         private Team _selectedTeam;
+        private int _bustCount = 0;
 
         public OperatorWindow()
         {
@@ -122,6 +123,7 @@ namespace FS_Dynamic
                 await SaveTrainingResult();
                 stopWatch.Reset();
                 off_Quantity_Counter = 0;
+                BustReset();
                 sp.Write("f");
                 System.Threading.Thread.Sleep(500);
                 sp.Write("y");
@@ -134,7 +136,7 @@ namespace FS_Dynamic
             {
                 sp.Write("y");
                 System.Threading.Thread.Sleep(500);
-                sp.Write("w");
+                sp.Write("w");            
                 Refresh.Content = "Restart";
                 Dispatcher.Invoke(() => TextIn.Text = set);
             }
@@ -173,7 +175,19 @@ namespace FS_Dynamic
             if (Discipline.SelectedItem != null)
             {
                 string selectedDiscipline = Discipline.SelectedItem as string;
-
+                
+                switch (selectedDiscipline)
+                {
+                    case "DS":
+                        off_Quantity_Value = 1;
+                        break;
+                    case "D2W":
+                        off_Quantity_Value = 2;
+                        break;
+                    case "D4W":
+                        off_Quantity_Value = 4;
+                        break;
+                }
 
                 Team_Name.IsEnabled = true;
                 Team_Name.ItemsSource = new List<string> { "Загрузка..." };
@@ -233,12 +247,28 @@ namespace FS_Dynamic
             }
         }
 
-        //private async Task SaveTrainigResult()
+        //private async Task SaveTrainingResult()
         //{
-        //    if (_selectedTeam == null || Discipline.SelectedItem == null)
+        //    System.Diagnostics.Debug.WriteLine("=== SAVE TRAINING RESULT METHOD ===");
+
+        //    if (_selectedTeam == null)
         //    {
-        //        MessageBox.Show("Выберите дисциплину и команду перед сохранением");
+        //        System.Diagnostics.Debug.WriteLine("Selected team is NULL");
+        //        MessageBox.Show("Выберите команду перед сохранением");
+        //        return;
         //    }
+
+        //    if (Discipline.SelectedItem == null)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine("Discipline is NULL");
+        //        MessageBox.Show("Выберите дисциплину перед сохранением");
+        //        return;
+        //    }
+
+        //    System.Diagnostics.Debug.WriteLine($"Selected Team: {_selectedTeam.Id}, Athlete: {_selectedTeam.AthleteId}");
+        //    System.Diagnostics.Debug.WriteLine($"Discipline: {Discipline.SelectedItem}");
+        //    System.Diagnostics.Debug.WriteLine($"Time: {ts_0.TotalMilliseconds}ms");
+
         //    try
         //    {
         //        var result = new TrainingResult
@@ -247,58 +277,51 @@ namespace FS_Dynamic
         //            AthleteId = _selectedTeam.AthleteId,
         //            Discipline = Discipline.SelectedItem.ToString(),
         //            TimeMs = (int)ts_0.TotalMilliseconds,
-        //            Busts = 0,
+        //            Busts = _bustCount,
         //            Skips = 0
         //        };
 
-        //        bool succes = await _resultService.SaveTrainingResultAsync(result);
+        //        bool success = await _resultService.SaveTrainingResultAsync(result);
 
-        //        if (succes)
+        //        if (success)
         //        {
-        //            MessageBox.Show("Результат успешно сохранен");
+        //            MessageBox.Show("Результат успешно сохранен!");
+        //            _bustCount = 0;
         //        }
         //        else
         //        {
         //            MessageBox.Show("Ошибка сохранения результата");
         //        }
         //    }
-        //    catch(Exception ex)
+        //    catch (Exception ex)
         //    {
-        //        MessageBox.Show($"Ошибка {ex.Message}");
+        //        System.Diagnostics.Debug.WriteLine($"Save Exception: {ex}");
+        //        MessageBox.Show($"Ошибка: {ex.Message}");
         //    }
         //}
 
         private async Task SaveTrainingResult()
         {
-            System.Diagnostics.Debug.WriteLine("=== SAVE TRAINING RESULT METHOD ===");
-
-            if (_selectedTeam == null)
+            if (_selectedTeam == null || Discipline.SelectedItem == null)
             {
-                System.Diagnostics.Debug.WriteLine("Selected team is NULL");
-                MessageBox.Show("Выберите команду перед сохранением");
+                MessageBox.Show("Выберите дисциплину и команду перед сохранением");
                 return;
             }
-
-            if (Discipline.SelectedItem == null)
-            {
-                System.Diagnostics.Debug.WriteLine("Discipline is NULL");
-                MessageBox.Show("Выберите дисциплину перед сохранением");
-                return;
-            }
-
-            System.Diagnostics.Debug.WriteLine($"Selected Team: {_selectedTeam.Id}, Athlete: {_selectedTeam.AthleteId}");
-            System.Diagnostics.Debug.WriteLine($"Discipline: {Discipline.SelectedItem}");
-            System.Diagnostics.Debug.WriteLine($"Time: {ts_0.TotalMilliseconds}ms");
 
             try
             {
+                string discipline = Discipline.SelectedItem.ToString();
+                int baseTimeMs = (int)ts_0.TotalMilliseconds;
+                int timeWithBustsMs = CalculateTimeWithBusts(baseTimeMs, discipline, _bustCount);
+
                 var result = new TrainingResult
                 {
                     TeamId = _selectedTeam.Id,
                     AthleteId = _selectedTeam.AthleteId,
-                    Discipline = Discipline.SelectedItem.ToString(),
-                    TimeMs = (int)ts_0.TotalMilliseconds,
-                    Busts = 0,
+                    Discipline = discipline,
+                    TimeMs = baseTimeMs,
+                    TimeWithBustsMs = timeWithBustsMs, // ← СОХРАНЯЕМ ВРЕМЯ С БАСТАМИ
+                    Busts = _bustCount,
                     Skips = 0
                 };
 
@@ -306,7 +329,14 @@ namespace FS_Dynamic
 
                 if (success)
                 {
-                    MessageBox.Show("Результат успешно сохранен!");
+                    // Форматируем время для сообщения
+                    string baseTime = FormatTime(baseTimeMs);
+                    string timeWithBusts = FormatTime(timeWithBustsMs);
+
+                    MessageBox.Show($"Результат сохранен!\nЧистое время: {baseTime}\nС бастами: {timeWithBusts}\nBusts: {_bustCount}");
+
+                    _bustCount = 0;
+                    UpdateBustDisplay();
                 }
                 else
                 {
@@ -315,10 +345,58 @@ namespace FS_Dynamic
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Save Exception: {ex}");
                 MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
+
+        private void BtnBust_Click(object sender, RoutedEventArgs e)
+        {
+            _bustCount++;
+            UpdateBustDisplay();
+            sp.Write("b");
+        }
+
+        private void BustReset()
+        { 
+            _bustCount = 0;
+            UpdateBustDisplay();
+        }
+
+        private void UpdateBustDisplay()
+        { 
+            txtBustCount.Text = _bustCount.ToString();
+        }
+
+        private int CalculateTimeWithBusts(int baseTimeMs, string discipline, int busts)
+        {
+            int bustPenaltyMs = 0;
+
+            switch (discipline)
+            {
+                case "DS":
+                    bustPenaltyMs = busts * 3000; // 3 секунды за баст
+                    //off_Quantity_Value = 1; // ← УСТАНАВЛИВАЕМ ДЛЯ DS
+                    break;
+                case "D2W":
+                    bustPenaltyMs = busts * 5000; // 5 секунд за баст
+                    //off_Quantity_Value = 2; // ← УСТАНАВЛИВАЕМ ДЛЯ D2W
+                    break;
+                case "D4W":
+                    bustPenaltyMs = busts * 5000; // 5 секунд за баст
+                    //off_Quantity_Value = 4; // ← УСТАНАВЛИВАЕМ ДЛЯ D4W
+                    break;
+            }
+
+            return baseTimeMs + bustPenaltyMs;
+        }
+
+        private string FormatTime(int ms)
+        {
+            TimeSpan ts = TimeSpan.FromMilliseconds(ms);
+            return $"{(int)ts.TotalSeconds:00}:{ts.Milliseconds:000}";
+        }
+
+
     }
 }
 

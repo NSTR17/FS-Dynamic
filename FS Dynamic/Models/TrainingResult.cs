@@ -21,6 +21,9 @@ namespace FS_Dynamic.Models
         [JsonProperty("time_ms")]
         public int TimeMs { get; set; }
 
+        [JsonProperty("time_with_busts_ms")]
+        public int TimeWithBustsMs { get; set; }
+
         [JsonProperty("busts")]
         public int Busts { get; set; }
 
