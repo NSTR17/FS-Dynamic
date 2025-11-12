@@ -2,6 +2,7 @@
 using FS_Dynamic.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
@@ -36,6 +37,7 @@ namespace FS_Dynamic
         int off_Quantity_Counter = 0;
         string res;
         string set = "Set";
+        string status = "Status";
         private TeamService _teamService;
         private ResultService _resultService;
         private List<Team> _allTeams;
@@ -45,14 +47,18 @@ namespace FS_Dynamic
         public OperatorWindow()
         {
             InitializeComponent();
+
             _teamService = new TeamService();
             _resultService = new ResultService();
+
             InitializeDecorativeTimer();
+
             COM.ItemsSource = ports;
             sp.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
 
             LoadDisciplines();
-            
+
+            this.Closed += OperatorWindow_Closed;
         }
                 
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -144,15 +150,38 @@ namespace FS_Dynamic
 
         private void BtnLines_Click(object sender, RoutedEventArgs e)
         {
-            sp.Write("f");
-            sp.Write("g");
-            Refresh.Content = "Start";
+            if (stopWatch.IsRunning)
+            {
+                stopWatch.Stop();
+                string elapsedTime = String.Format("{0:00}:{1:000}", (int)ts_0.TotalSeconds, ts_0.Milliseconds);
+                Dispatcher.Invoke(() => txtPrevTime.Text = elapsedTime);
+                Dispatcher.Invoke(() => txtStopWatch.Text = "00:000");
+                stopWatch.Reset();
+                off_Quantity_Counter = 0;
+                BustReset();
+                sp.Write("f");
+                System.Threading.Thread.Sleep(500);
+                sp.Write("g");
+                Refresh.Content = "Start";
+                Dispatcher.Invoke(() => TextIn.Text = status);
+            }
+            else
+            {
+                sp.Write("f");
+                BustReset();
+                System.Threading.Thread.Sleep(500);
+                sp.Write("g");
+                Refresh.Content = "Start";
+                Dispatcher.Invoke(() => TextIn.Text = status);
+            }
         }
 
         private void COM_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
+                CloseSerialPort();
+
                 if (sp.IsOpen)
                 {
                     sp.Close();
@@ -167,8 +196,35 @@ namespace FS_Dynamic
                 MessageBox.Show(ex.Message);
             }
         }
-               
 
+        private void CloseSerialPort()
+        {
+            try
+            {
+                if (sp != null && sp.IsOpen)
+                { 
+                    sp.DiscardInBuffer();
+                    sp.DiscardOutBuffer();
+                    sp.Close();
+                    sp.Dispose();
+                }
+            }
+            catch (Exception ex)
+            { 
+                Debug.WriteLine($"Ошибка при закрытии порта: {ex.Message}");
+            }
+        }
+
+        private void OperatorWindow_Closed(object sender, EventArgs e)
+        { 
+            CloseSerialPort();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            CloseSerialPort();
+            base.OnClosing(e);
+        }
         private async void Discipline_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Team_Name.SelectedItem = null;
@@ -246,59 +302,6 @@ namespace FS_Dynamic
                 _selectedTeam = null;
             }
         }
-
-        //private async Task SaveTrainingResult()
-        //{
-        //    System.Diagnostics.Debug.WriteLine("=== SAVE TRAINING RESULT METHOD ===");
-
-        //    if (_selectedTeam == null)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine("Selected team is NULL");
-        //        MessageBox.Show("Выберите команду перед сохранением");
-        //        return;
-        //    }
-
-        //    if (Discipline.SelectedItem == null)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine("Discipline is NULL");
-        //        MessageBox.Show("Выберите дисциплину перед сохранением");
-        //        return;
-        //    }
-
-        //    System.Diagnostics.Debug.WriteLine($"Selected Team: {_selectedTeam.Id}, Athlete: {_selectedTeam.AthleteId}");
-        //    System.Diagnostics.Debug.WriteLine($"Discipline: {Discipline.SelectedItem}");
-        //    System.Diagnostics.Debug.WriteLine($"Time: {ts_0.TotalMilliseconds}ms");
-
-        //    try
-        //    {
-        //        var result = new TrainingResult
-        //        {
-        //            TeamId = _selectedTeam.Id,
-        //            AthleteId = _selectedTeam.AthleteId,
-        //            Discipline = Discipline.SelectedItem.ToString(),
-        //            TimeMs = (int)ts_0.TotalMilliseconds,
-        //            Busts = _bustCount,
-        //            Skips = 0
-        //        };
-
-        //        bool success = await _resultService.SaveTrainingResultAsync(result);
-
-        //        if (success)
-        //        {
-        //            MessageBox.Show("Результат успешно сохранен!");
-        //            _bustCount = 0;
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Ошибка сохранения результата");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"Save Exception: {ex}");
-        //        MessageBox.Show($"Ошибка: {ex.Message}");
-        //    }
-        //}
 
         private async Task SaveTrainingResult()
         {
