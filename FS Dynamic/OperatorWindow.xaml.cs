@@ -336,7 +336,7 @@ namespace FS_Dynamic
                     string baseTime = FormatTime(baseTimeMs);
                     string timeWithBusts = FormatTime(timeWithBustsMs);
 
-                    MessageBox.Show($"Результат сохранен!\nЧистое время: {baseTime}\nС бастами: {timeWithBusts}\nBusts: {_bustCount}");
+                    //MessageBox.Show($"Результат сохранен!\nЧистое время: {baseTime}\nС бастами: {timeWithBusts}\nBusts: {_bustCount}");
 
                     _bustCount = 0;
                     UpdateBustDisplay();
